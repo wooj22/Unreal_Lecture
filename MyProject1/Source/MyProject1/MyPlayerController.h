@@ -6,9 +6,11 @@
 #include "GameFramework/PlayerController.h"
 #include "MyPlayerController.generated.h"
 
-/**
- * 
- */
+
+/*
+	[ PlayerController :  ]
+*/
+
 UCLASS()
 class MYPROJECT1_API AMyPlayerController : public APlayerController
 {
