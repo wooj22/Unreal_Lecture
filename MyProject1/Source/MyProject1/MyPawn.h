@@ -13,9 +13,10 @@ class UArrowComponent;
 class UCameraComponent;
 class USpringArmComponent;
 class UFloatingPawnMovement;
+class AMyActor;
 
 /*
-	[ Pawn : ∫Ò«‡±‚ ]
+	[ Pawn : MyRocket ]
 */
 
 UCLASS()
@@ -63,6 +64,10 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UFloatingPawnMovement> Movement;
+
+	// Actor
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	TSubclassOf<AMyActor> rocketTemplate;
 	
 
 	// Funsctions

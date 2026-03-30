@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "MyPawn.h"
 #include "MyActor.h"
 #include "Components/BoxComponent.h"
@@ -11,7 +10,6 @@
 #include "GameFramework/FloatingPawnMovement.h"
 
 #include "Kismet/GameplayStatics.h"  // 젤 많이쓰는거니까 외우기
-
 
 // Sets default values
 AMyPawn::AMyPawn()
@@ -74,6 +72,12 @@ AMyPawn::AMyPawn()
 	// Spring Arm setup
 	SpringArm->TargetArmLength = 120.f;
 	SpringArm->SocketOffset.Z = 1.5f;
+
+	// Rocket Template setup
+	static ConstructorHelpers::FClassFinder<AMyActor> RocketBP(TEXT("/Script/Engine.StaticMesh'/Game/0316/P38/SM_Rocket1.SM_Rocket1'"));
+	if (RocketBP.Succeeded()) {
+		rocketTemplate = RocketBP.Class;
+	}
 }
 
 // Called when the game starts or when spawned
@@ -129,13 +133,14 @@ void AMyPawn::RotatePropeller(UStaticMeshComponent* where)
 	float delta = UGameplayStatics::GetWorldDeltaSeconds(GetWorld());
 	float speed = 2880.f;
 
-	where->AddLocalRotation(FRotator(delta * speed, 0, 0));
+	where->AddLocalRotation(FRotator(0, delta * speed, 0));
 }
 
 // Input Action "Fire" 이벤트시 액터 생성
 void AMyPawn::Shoot()
 {
-	GetWorld()->SpawnActor<AActor>(AMyActor::StaticClass(),
+	// rocketTemplate
+	GetWorld()->SpawnActor<AActor>(rocketTemplate,
 		Arrow->K2_GetComponentToWorld());
 }
 
