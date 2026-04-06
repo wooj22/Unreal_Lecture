@@ -13,6 +13,17 @@ class UCameraComponent;
 class UInputAction;
 
 
+// Enum - Weapon State
+UENUM(BlueprintType)
+enum class EWeaponState : uint8
+{
+	Unarmed = 0 UMETA(Display = "Unarmed"),
+	Pistol = 1 UMETA(Display = "Pistol"),
+	Rifle = 2 UMETA(Display = "Rifle"),
+	GrenadeLauncher = 0 UMETA(Display = "GrenadeLauncher")
+};
+
+
 UCLASS()
 class THIRDPERSON_API ATPSPlayer : public ACharacter
 {
@@ -38,6 +49,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_Zoom;
+
+	// [ Variables ]
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	EWeaponState CurrentWeapon = EWeaponState::Unarmed;
 
 	
 	// Sets default values for this character's properties
