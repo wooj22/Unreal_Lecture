@@ -41,7 +41,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UChildActorComponent> Weapon;
 
-	// [Child Actor]
+	// [ Child Actor ]
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	TSubclassOf<class AWeaponBase> DefalutWeapon;
 
@@ -59,10 +59,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_Zoom;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputAction> IA_Fire;
+
 
 	// [ Variables ]
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	EWeaponState CurrentWeapon = EWeaponState::Unarmed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
+	uint8 bIsFire : 1;		// 1: Fire, 0: Not Fire
 
 	
 	// Sets default values for this character's properties
@@ -81,12 +87,21 @@ public:
 	// [ Input ]
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	// Input Action Handlers
+	// Input Action Functions
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Zoom(const FInputActionValue& Value);
+	void Fire(const FInputActionValue& Value);
+	
+
 
 	// [Funcstion]
+	// Weapon Equip
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void EquipItem(TSubclassOf<AWeaponBase> WeaponTemplate);
+
+	// Fire
+	void Fire();
+	void StartFire();
+	void StopFire();
 };
