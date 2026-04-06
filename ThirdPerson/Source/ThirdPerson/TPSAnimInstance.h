@@ -30,4 +30,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stat")
 	EWeaponState CurrentWeapon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stat")
+	float AimYaw; 
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stat")
+	float AimPitch;
 };

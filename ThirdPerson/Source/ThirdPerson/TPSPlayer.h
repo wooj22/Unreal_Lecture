@@ -10,8 +10,9 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class UChildActorComponent;
 class UInputAction;
-
+class AWeaponBase;
 
 // Enum - Weapon State
 UENUM(BlueprintType)
@@ -37,6 +38,14 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	TObjectPtr<UCameraComponent> FollowCamera;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UChildActorComponent> Weapon;
+
+	// [Child Actor]
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	TSubclassOf<class AWeaponBase> DefalutWeapon;
+
+
 	// [ Input Actions ]
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_Move;
@@ -49,6 +58,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_Zoom;
+
 
 	// [ Variables ]
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
@@ -75,4 +85,8 @@ public:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Zoom(const FInputActionValue& Value);
+
+	// [Funcstion]
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void EquipItem(TSubclassOf<AWeaponBase> WeaponTemplate);
 };

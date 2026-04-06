@@ -8,6 +8,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "WeaponBase.h"
 
 // Sets default values
 ATPSPlayer::ATPSPlayer()
@@ -26,6 +27,11 @@ ATPSPlayer::ATPSPlayer()
     FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
     FollowCamera->bUsePawnControlRotation = false;
 
+	// CHildActorComponent - Weapon
+    Weapon = CreateDefaultSubobject<UChildActorComponent>(TEXT("Weaoib"));
+    Weapon->SetupAttachment(GetMesh());
+
+
     // Mesh
     GetMesh()->SetRelativeLocationAndRotation(
 		FVector(0, 0, -GetCapsuleComponent()->GetScaledCapsuleHalfHeight()), 
@@ -37,7 +43,8 @@ ATPSPlayer::ATPSPlayer()
 void ATPSPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-	
+    
+	EquipItem(DefalutWeapon);
 }
 
 // Called every frame
@@ -86,7 +93,7 @@ void ATPSPlayer::Look(const FInputActionValue& Value)
 {
     FVector2D direction = Value.Get<FVector2D>();
 
-	//AddControllerPitchInput(direction.Y);     // 마우스 상하 이동 : Pitch
+	AddControllerPitchInput(direction.Y);     // 마우스 상하 이동 : Pitch
 	AddControllerYawInput(direction.X);         // 마우스 좌우 이동 : Yaw
 }
 
@@ -97,4 +104,34 @@ void ATPSPlayer::Zoom(const FInputActionValue& Value)
     // Zoom In / Out
     CameraBoom->TargetArmLength += zoomValue * 10.f;   // 줌 속도 조절 (10.f는 임의의 값)
 	CameraBoom->TargetArmLength = FMath::Clamp(CameraBoom->TargetArmLength, 100.f, 500.f); // 최소/최대 줌 거리 설정
+
+    
+}
+
+void ATPSPlayer::EquipItem(TSubclassOf<AWeaponBase> WeaponTemplate)
+{
+	// Pickup된 아이템 Get
+	// WeaponTemplate->GetClass() -> 클래스 이름임. 리플렉션에서 클래스 이름으로 객체를 생성할 수 있음.
+	// CPP는 클래스 이름이 없어서 CDO에서 클래스 이름을 가져와야 함. CDO는 클래스의 기본 객체로, 클래스의 기본 속성을 가지고 있음.
+    Weapon->SetChildActorClass(WeaponTemplate->GetClass());  
+
+    // 아이템이 WeaponBase라면
+    AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
+
+    // ChildCompoent로 Attach
+    if (ChildWeapon)
+    {
+        switch (ChildWeapon->WeaponType)
+        {
+            case EWeaponState::Pistol:
+            {
+                ChildWeapon->AttachToComponent(GetMesh(),
+                    FAttachmentTransformRules::KeepRelativeTransform, ChildWeapon->SocketName);
+                ChildWeapon->SetOwner(this);
+                CurrentWeapon = ChildWeapon->WeaponType;
+
+                break;
+            }
+        }
+    }
 }
