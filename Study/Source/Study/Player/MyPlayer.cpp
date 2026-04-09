@@ -43,21 +43,20 @@ AMyPlayer::AMyPlayer()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 	cmc->bOrientRotationToMovement = true;				// ture : 이동 방향으로 회전, false : 자동 회전 x
-	cmc->RotationRate = FRotator(0.0f, 720.0f, 0.0f);	// 초당 회전 속도
+	cmc->RotationRate = FRotator(0.0f, 720.0f, 0.0f);	// 이동 방향 회전시, 초당 회전 속도
 
 	// 기본 이동값
-	cmc->MaxWalkSpeed = MovementController->WalkSpeed;			   // 걷기 최대 속도
-	cmc->MaxWalkSpeedCrouched = MovementController->WalkSpeed / 2;  // 웅크리고 걷기 최대 속도
-	cmc->MinAnalogWalkSpeed = MovementController->WalkSpeed / 3;    // 살짝 이동시 속도 (패드를 살짝 밀었을때)
+	cmc->MaxWalkSpeed = MovementController->WalkSpeed;					// 걷기 최대 속도
+	cmc->MaxWalkSpeedCrouched = MovementController->WalkSpeed / 2;		// 웅크리고 걷기 최대 속도
+	cmc->MinAnalogWalkSpeed = MovementController->AnalogWalkSpeed / 3;  // 살짝 이동시 속도 (패드를 살짝 밀었을때)
 
-	// 점프, 공중제어
-	cmc->JumpZVelocity = 700.f;		// 점프 시작 속도
+	// 공중제어
 	cmc->GravityScale = 1.5f;		// 중력 배율
-	cmc->AirControl = 0.35f;		// 공중 방향 조절 정도 (0이면 공중제어 x, 높은수록 방향전환 쉬움)
+	cmc->AirControl = MovementController->AirControl;		// 공중 방향 조절 정도 (0이면 공중제어 x, 높은수록 방향전환 쉬움)
 
 	// 물리
-	cmc->MaxAcceleration = 2048.f;			    // 가속, 감속 (MinAnalogWalkSpeed<->MaxWalkSpeed)
-	cmc->BrakingDecelerationWalking = 2048.f;	// 멈춤 반응 속도
+	cmc->MaxAcceleration = MovementController->MaxAcceleration;		    // 현재속도에서 목표속도로 가속하는 정도
+	cmc->BrakingDecelerationWalking = MovementController->BrakingDecelerationWalking;	// 이동을 멈출떄 감속하는 힘
 }
 
 void AMyPlayer::BeginPlay()

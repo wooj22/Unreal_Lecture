@@ -30,7 +30,6 @@ class STUDY_API UPlayerMovementComponent : public UActorComponent
 private:
 	// [ Component Ref ]
 	AMyPlayer* Player;
-	AController* Controller;
 	UCharacterMovementComponent* CharacterMovement;
 
 public:	
@@ -51,15 +50,32 @@ public:
 	void SetMovementSpeed(float NewSpeed);
 	void ApplyMoveInput();
 
+	// [ Lockon Movement Set ]
+	void SetLockOnMoveMode(bool bIsLockOn);
+
 
 public:	
 	// [ Movement Values ]
 	UPROPERTY()
-	float WalkSpeed = 500.0f;
+	float WalkSpeed = 400.0f;
 
 	UPROPERTY()
 	float RunSpeed = 850.0f;
 
+	UPROPERTY()
+	float GardSpeed = 200.0f;
+
+	UPROPERTY()
+	float AnalogWalkSpeed = 120.0f;
+
+	UPROPERTY()
+	float AirControl = 0.35f;
+
+	UPROPERTY()
+	float MaxAcceleration = 2048.f;
+
+	UPROPERTY()
+	float BrakingDecelerationWalking = 2048.f;
 
 	// [ Input ]
 	UPROPERTY()

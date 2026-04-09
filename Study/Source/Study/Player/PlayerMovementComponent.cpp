@@ -13,10 +13,19 @@ void UPlayerMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// GetCompoent
 	Player = Cast<AMyPlayer>(GetOwner());
-	Controller = Player->GetController();
+	if (!Player)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[PlayerMovement][%s] Owner Player nullptr"), *GetNameSafe(this));
+		return;
+	}
+
 	CharacterMovement = Player->GetCharacterMovement();
+	if (!CharacterMovement)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[PlayerMovement][%s] CharacterMovement nullptr"), *GetNameSafe(this));
+		return;
+	}
 }
 
 void UPlayerMovementComponent::SetMoveInput(const FVector2D& MoveInput_)
@@ -39,9 +48,11 @@ void UPlayerMovementComponent::SetMovementSpeed(float NewSpeed)
 
 void UPlayerMovementComponent::ApplyMoveInput()
 {
-	if (!Player || !Controller || !CharacterMovement)
+	APlayerController* Controller = Cast<APlayerController>(Player->GetController());
+	if (!Controller)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayerMovement nullptr!"));
+		UE_LOG(LogTemp, Warning, TEXT("[PlayerMovement][%s][%s] Controller nullptr!"),
+			*GetNameSafe(this), *GetNameSafe(Player));
 		return;
 	}
 
@@ -58,6 +69,16 @@ void UPlayerMovementComponent::ApplyMoveInput()
 
 	Player->AddMovementInput(Forward, MoveInput.Y);
 	Player->AddMovementInput(Right, MoveInput.X);
+}
 
-	
+void UPlayerMovementComponent::SetLockOnMoveMode(bool bIsLockOn)
+{
+	if (bIsLockOn)
+	{
+		
+	}
+	else
+	{
+		
+	}
 }
