@@ -55,10 +55,10 @@ public:
 public:	
 	// [ Movement Values ]
 	UPROPERTY()
-	float WalkSpeed = 600.0f;
+	float WalkSpeed = 500.0f;
 
 	UPROPERTY()
-	float RunSpeed = 800.0f;
+	float RunSpeed = 850.0f;
 
 
 	// [ Input ]

@@ -42,8 +42,8 @@ AMyPlayer::AMyPlayer()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
-	cmc->bOrientRotationToMovement = true;	// ture : 이동 방향으로 회전, false : 자동 회전 x
-	cmc->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
+	cmc->bOrientRotationToMovement = true;				// ture : 이동 방향으로 회전, false : 자동 회전 x
+	cmc->RotationRate = FRotator(0.0f, 720.0f, 0.0f);	// 초당 회전 속도
 
 	// 기본 이동값
 	cmc->MaxWalkSpeed = MovementController->WalkSpeed;			   // 걷기 최대 속도
@@ -53,7 +53,7 @@ AMyPlayer::AMyPlayer()
 	// 점프, 공중제어
 	cmc->JumpZVelocity = 700.f;		// 점프 시작 속도
 	cmc->GravityScale = 1.5f;		// 중력 배율
-	cmc->AirControl = 0.35f;			// 공중 방향 조절 정도 (0이면 공중제어 x, 높은수록 방향전환 쉬움)
+	cmc->AirControl = 0.35f;		// 공중 방향 조절 정도 (0이면 공중제어 x, 높은수록 방향전환 쉬움)
 
 	// 물리
 	cmc->MaxAcceleration = 2048.f;			    // 가속, 감속 (MinAnalogWalkSpeed<->MaxWalkSpeed)
@@ -156,7 +156,7 @@ void AMyPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 			EnhancedInput->BindAction(IA_Look, ETriggerEvent::Triggered, this, &AMyPlayer::Look);
 		
 		if (IA_Run) {
-			EnhancedInput->BindAction(IA_Run, ETriggerEvent::Started, this, &AMyPlayer::StartRunInputMapping);
+			EnhancedInput->BindAction(IA_Run, ETriggerEvent::Triggered, this, &AMyPlayer::StartRunInputMapping);
 			EnhancedInput->BindAction(IA_Run, ETriggerEvent::Completed, this, &AMyPlayer::StopRunInputMapping);
 			EnhancedInput->BindAction(IA_Run, ETriggerEvent::Canceled, this, &AMyPlayer::StopRunInputMapping);
 		}
