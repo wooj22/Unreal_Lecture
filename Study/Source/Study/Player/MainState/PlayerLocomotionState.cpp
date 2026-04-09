@@ -37,8 +37,8 @@ void UPlayerLocomotionState::OnUpdate(float DeltaTime)
 		return;
 	}
 
-	// Sub FSM 평가
-	EvaluateSubState();
+	// Locomotion 공용 상위 트랜지션 (나머지는 하위 State에서 전이)
+	TryGlobalTransition();
 
 	// Movement Apply
 	float Speed = 0.f;
@@ -120,41 +120,23 @@ void UPlayerLocomotionState::ChangeSubStateEnum(ELocomotionSubState NewStateEnum
 		CurrentSubState->OnEnter();
 }
 
-void UPlayerLocomotionState::EvaluateSubState()
+void UPlayerLocomotionState::TryGlobalTransition()
 {
 	UCharacterMovementComponent* CMC = Player->GetCharacterMovement();
-	if (!CMC)
-	{
-		return;
-	}
+	if (!CMC) return;
 
-	// 이동 상태를 평가하고 하위 상태 전이
-	const bool bIsFalling = PMC->bIsFalling;
-	const float Speed2D = PMC->CurrentSpeed;
-	const bool bHasMoveInput = PMC->bHasMoveInput;
-	const bool bRunRequested = PMC->IsRunRequested();
-
-	if (bIsFalling)
+	// 공용? Locomotion Transition
+	// Fall
+	if (PMC->bIsFalling && CurrentSubStateEnum != ELocomotionSubState::Fall)
 	{
 		ChangeSubStateEnum(ELocomotionSubState::Fall);
 		return;
 	}
 
-	if (Speed2D <= 3.0f)
+	// Land
+	if (CurrentSubStateEnum == ELocomotionSubState::Fall && !PMC->bIsFalling)
 	{
-		ChangeSubStateEnum(ELocomotionSubState::Idle);
-		return;
-	}
-
-	if (bHasMoveInput && bRunRequested)
-	{
-		ChangeSubStateEnum(ELocomotionSubState::Run);
-		return;
-	}
-
-	if (bHasMoveInput)
-	{
-		ChangeSubStateEnum(ELocomotionSubState::Walk);
+		ChangeSubStateEnum(ELocomotionSubState::Land);
 		return;
 	}
 }

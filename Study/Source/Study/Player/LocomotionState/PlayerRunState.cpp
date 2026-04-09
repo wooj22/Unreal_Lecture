@@ -2,6 +2,8 @@
 
 
 #include "PlayerRunState.h"
+#include "../MainState/PlayerLocomotionState.h"
+#include "../PlayerMovementComponent.h"
 
 void UPlayerRunState::OnEnter()
 {
@@ -10,6 +12,21 @@ void UPlayerRunState::OnEnter()
 
 void UPlayerRunState::OnUpdate(float DeltaTime)
 {
+	if (LocomotionState->PMC->bHasMoveInput)
+	{
+		// Walk
+		if (!LocomotionState->PMC->IsRunRequested())
+		{
+			LocomotionState->ChangeSubStateEnum(ELocomotionSubState::Walk);
+			return;
+		}
+	}
+	// Idle
+	else
+	{
+		LocomotionState->ChangeSubStateEnum(ELocomotionSubState::Idle);
+		return;
+	}
 }
 
 void UPlayerRunState::OnExit()

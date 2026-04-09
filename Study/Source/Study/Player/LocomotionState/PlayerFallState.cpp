@@ -2,6 +2,8 @@
 
 
 #include "PlayerFallState.h"
+#include "../MainState/PlayerLocomotionState.h"
+#include "../PlayerMovementComponent.h"
 
 void UPlayerFallState::OnEnter()
 {

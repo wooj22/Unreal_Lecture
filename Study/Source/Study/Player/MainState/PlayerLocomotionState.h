@@ -49,21 +49,19 @@ public:
 	// [ Sub FSM ]
 	void InitSubFSM();
 	void ChangeSubStateEnum(ELocomotionSubState NewStateEnum);
-	void EvaluateSubState();
+	void TryGlobalTransition();
 
 	UPlayerLocomotionBaseState* GetCurrentSubState() const { return CurrentSubState; }
 	ELocomotionSubState GetCurrentSubStateEnum() const { return CurrentSubStateEnum; }
 
 
-private:
+public:
 	// [ Component Ref ]
 	UPlayerMovementComponent* PMC = nullptr;
 
-	// [ Functions ]
-	// TODO..
-
 
 private:
+	// Locomotio State
 	UPROPERTY(VisibleAnywhere)
 	TArray<TObjectPtr<UPlayerLocomotionBaseState>> SubStates;
 

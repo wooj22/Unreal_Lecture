@@ -20,4 +20,12 @@ public:
 	void OnEnter() override;
 	void OnUpdate(float DeltaTime) override;
 	void OnExit() override;
+
+private:
+	// 애니메이션 넣기 전 Land 1.5초 임시
+	UPROPERTY()
+	float LandingTime = 1.5f;
+	
+	UPROPERTY()
+	float LandProgressTime = 0.0f;
 };
