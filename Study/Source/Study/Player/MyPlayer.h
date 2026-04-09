@@ -54,7 +54,7 @@ public:
 	TObjectPtr<UCameraComponent> Camera;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
-	TObjectPtr<UPlayerMovementComponent> MovementController;
+	TObjectPtr<UPlayerMovementComponent> PCM;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FSM")
 	TObjectPtr<UPlayerFSMComponent> FSM;

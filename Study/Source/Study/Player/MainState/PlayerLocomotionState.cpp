@@ -45,15 +45,15 @@ void UPlayerLocomotionState::OnUpdate(float DeltaTime)
 	switch (CurrentSubStateEnum)
 	{
 	case ELocomotionSubState::Walk:
-		Speed = Player->MovementController->WalkSpeed;
+		Speed = Player->PCM->WalkSpeed;
 		break;
 	case ELocomotionSubState::Run:
-		Speed = Player->MovementController->RunSpeed;
+		Speed = Player->PCM->RunSpeed;
 		break;
 	}
 
-	Player->MovementController->SetMovementSpeed(Speed);
-	Player->MovementController->ApplyMoveInput();
+	Player->PCM->SetMovementSpeed(Speed);
+	Player->PCM->ApplyMoveInput();
 
 
 	// Update Locomotion FSM
