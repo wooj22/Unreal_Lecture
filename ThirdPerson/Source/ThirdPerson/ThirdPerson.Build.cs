@@ -14,8 +14,9 @@ public class ThirdPerson : ModuleRules
 			"Engine",
 			"InputCore",
 			"Niagara",
-			"EnhancedInput"
-		});
+			"EnhancedInput",
+			"AnimGraphRuntime",
+        });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
