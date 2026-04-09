@@ -74,7 +74,6 @@ public:
 	bool bIsFalling;
 
 
-
 	// [ Input ] - InputMappined되어 값 할당됨
 	UPROPERTY(VisibleAnywhere)
 	FVector2D MoveInput = FVector2D::ZeroVector;
@@ -84,6 +83,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	bool bRunRequested = false;
+
 
 	// [ Movement Set Values ]
 	UPROPERTY(VisibleAnywhere)

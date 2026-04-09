@@ -72,4 +72,10 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	ELocomotionSubState CurrentSubStateEnum = ELocomotionSubState::Count;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UPlayerLocomotionBaseState> PreviousSubState;
+
+	UPROPERTY(VisibleAnywhere)
+	ELocomotionSubState PreviousSubStateEnum = ELocomotionSubState::Count;
 };

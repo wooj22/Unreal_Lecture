@@ -110,6 +110,8 @@ void UPlayerLocomotionState::ChangeSubStateEnum(ELocomotionSubState NewStateEnum
 		CurrentSubState->OnExit();
 
 	// Change State
+	PreviousSubState = CurrentSubState;
+	PreviousSubStateEnum = CurrentSubStateEnum;
 	CurrentSubStateEnum = NewStateEnum;
 	CurrentSubState = SubStates[(int32)CurrentSubStateEnum];
 
