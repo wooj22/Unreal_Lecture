@@ -5,7 +5,7 @@
 
 void UPlayerFallState::OnEnter()
 {
-	UE_LOG(LogTemp, Warning, TEXT("[Player Sub FSM] Enter Idle"));
+	UE_LOG(LogTemp, Warning, TEXT("[Player Sub FSM] Enter Fall"));
 }
 
 void UPlayerFallState::OnUpdate(float DeltaTime)
@@ -14,5 +14,5 @@ void UPlayerFallState::OnUpdate(float DeltaTime)
 
 void UPlayerFallState::OnExit()
 {
-	UE_LOG(LogTemp, Warning, TEXT("[Player Sub FSM] Exit Idle"));
+	UE_LOG(LogTemp, Warning, TEXT("[Player Sub FSM] Exit Fall"));
 }

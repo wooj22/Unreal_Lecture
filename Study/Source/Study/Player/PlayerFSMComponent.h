@@ -63,17 +63,17 @@ public:
 private:
 	// [ Variables ]
 	// Player
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<AMyPlayer> OwnerPlayer;
 
 	// States
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	TArray<TObjectPtr<UPlayerBaseState>> States;
 
 	// Cur State
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UPlayerBaseState> CurrentState;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	EPlayerMainState CurrentStateEnum = EPlayerMainState::Count;
 };

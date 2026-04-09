@@ -20,12 +20,18 @@ void UPlayerMovementComponent::BeginPlay()
 		return;
 	}
 
-	CharacterMovement = Player->GetCharacterMovement();
-	if (!CharacterMovement)
+	CMC = Player->GetCharacterMovement();
+	if (!CMC)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("[PlayerMovement][%s] CharacterMovement nullptr"), *GetNameSafe(this));
 		return;
 	}
+}
+
+void UPlayerMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	// Movement 상태 플래그 Update
+	UpdateMovementState();
 }
 
 void UPlayerMovementComponent::SetMoveInput(const FVector2D& MoveInput_)
@@ -40,9 +46,9 @@ void UPlayerMovementComponent::SetRunRequested(bool bRunRequested_)
 
 void UPlayerMovementComponent::SetMovementSpeed(float NewSpeed)
 {
-	if (CharacterMovement)
+	if (CMC)
 	{
-		CharacterMovement->MaxWalkSpeed = NewSpeed;
+		CMC->MaxWalkSpeed = NewSpeed;
 	}
 }
 
@@ -81,4 +87,17 @@ void UPlayerMovementComponent::SetLockOnMoveMode(bool bIsLockOn)
 	{
 		
 	}
+}
+
+void UPlayerMovementComponent::UpdateMovementState()
+{
+	if (!Player || !CMC)
+	{
+		return;
+	}
+
+	CurrentSpeed = Player->GetVelocity().Size2D();
+	bHasMoveInput = !MoveInput.IsNearlyZero();
+	bIsMoving = CurrentSpeed > KINDA_SMALL_NUMBER;
+	bIsFalling = CMC->IsFalling();
 }

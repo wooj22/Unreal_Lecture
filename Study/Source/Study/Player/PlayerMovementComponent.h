@@ -30,13 +30,14 @@ class STUDY_API UPlayerMovementComponent : public UActorComponent
 private:
 	// [ Component Ref ]
 	AMyPlayer* Player;
-	UCharacterMovementComponent* CharacterMovement;
+	UCharacterMovementComponent* CMC;
 
 public:	
 	UPlayerMovementComponent();
 
 protected:
-	virtual void BeginPlay() override;
+	virtual void BeginPlay() override; 
+	void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
 	// [ Input Recive ]
@@ -53,37 +54,56 @@ public:
 	// [ Lockon Movement Set ]
 	void SetLockOnMoveMode(bool bIsLockOn);
 
+private:
+	// Internal Funcs..
+	void UpdateMovementState();
+
 
 public:	
-	// [ Movement Values ]
-	UPROPERTY()
-	float WalkSpeed = 400.0f;
+	// [ Movement Flag / State ]
+	UPROPERTY(VisibleAnywhere)
+	float CurrentSpeed;
 
-	UPROPERTY()
-	float RunSpeed = 850.0f;
+	UPROPERTY(VisibleAnywhere)
+	bool bHasMoveInput;
 
-	UPROPERTY()
-	float GardSpeed = 200.0f;
+	UPROPERTY(VisibleAnywhere)
+	bool bIsMoving;
 
-	UPROPERTY()
-	float AnalogWalkSpeed = 120.0f;
+	UPROPERTY(VisibleAnywhere)
+	bool bIsFalling;
 
-	UPROPERTY()
-	float AirControl = 0.35f;
 
-	UPROPERTY()
-	float MaxAcceleration = 2048.f;
 
-	UPROPERTY()
-	float BrakingDecelerationWalking = 2048.f;
-
-	// [ Input ]
-	UPROPERTY()
+	// [ Input ] - InputMappined되어 값 할당됨
+	UPROPERTY(VisibleAnywhere)
 	FVector2D MoveInput = FVector2D::ZeroVector;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	FVector2D LookInput = FVector2D::ZeroVector;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	bool bRunRequested = false;
+
+	// [ Movement Set Values ]
+	UPROPERTY(VisibleAnywhere)
+	float WalkSpeed = 400.0f;
+
+	UPROPERTY(VisibleAnywhere)
+	float RunSpeed = 850.0f;
+
+	UPROPERTY(VisibleAnywhere)
+	float GardSpeed = 200.0f;
+
+	UPROPERTY(VisibleAnywhere)
+	float AnalogWalkSpeed = 120.0f;
+
+	UPROPERTY(VisibleAnywhere)
+	float AirControl = 0.35f;
+
+	UPROPERTY(VisibleAnywhere)
+	float MaxAcceleration = 2048.f;
+
+	UPROPERTY(VisibleAnywhere)
+	float BrakingDecelerationWalking = 2048.f;
 };

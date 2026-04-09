@@ -17,6 +17,10 @@
 void UPlayerLocomotionState::Init(AMyPlayer* Player_, UPlayerFSMComponent* FSM_)
 {
 	Super::Init(Player_, FSM_);
+
+	PMC = Player_->FindComponentByClass<UPlayerMovementComponent>();
+	if (!PMC) UE_LOG(LogTemp, Warning, TEXT("[UPlayerLocomotionState] PMC nullptr!"));
+	
 	InitSubFSM();
 }
 
@@ -116,17 +120,17 @@ void UPlayerLocomotionState::ChangeSubStateEnum(ELocomotionSubState NewStateEnum
 
 void UPlayerLocomotionState::EvaluateSubState()
 {
-	UCharacterMovementComponent* MovementComp = Player->GetCharacterMovement();
-	if (!MovementComp)
+	UCharacterMovementComponent* CMC = Player->GetCharacterMovement();
+	if (!CMC)
 	{
 		return;
 	}
 
 	// 이동 상태를 평가하고 하위 상태 전이
-	const bool bIsFalling = MovementComp->IsFalling();
-	const float Speed2D = Player->GetVelocity().Size2D();
-	const bool bHasMoveInput = !Player->MovementController->GetMoveInput().IsNearlyZero();
-	const bool bRunRequested = Player->MovementController->IsRunRequested();
+	const bool bIsFalling = PMC->bIsFalling;
+	const float Speed2D = PMC->CurrentSpeed;
+	const bool bHasMoveInput = PMC->bHasMoveInput;
+	const bool bRunRequested = PMC->IsRunRequested();
 
 	if (bIsFalling)
 	{

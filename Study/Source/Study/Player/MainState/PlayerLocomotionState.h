@@ -7,6 +7,7 @@
 #include "PlayerLocomotionState.generated.h"
 
 class UPlayerLocomotionBaseState;
+class UPlayerMovementComponent;
 
 
 // Locomotion Sub State Enum
@@ -55,17 +56,20 @@ public:
 
 
 private:
+	// [ Component Ref ]
+	UPlayerMovementComponent* PMC = nullptr;
+
 	// [ Functions ]
 	// TODO..
 
 
 private:
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	TArray<TObjectPtr<UPlayerLocomotionBaseState>> SubStates;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UPlayerLocomotionBaseState> CurrentSubState;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	ELocomotionSubState CurrentSubStateEnum = ELocomotionSubState::Count;
 };
