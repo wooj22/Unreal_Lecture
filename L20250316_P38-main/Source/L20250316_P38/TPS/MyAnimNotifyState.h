@@ -19,4 +19,13 @@ public:
 	virtual void NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime, const FAnimNotifyEventReference& EventReference) override;
 	virtual void NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
 
+	// 몽타주에서 Notify 클릭하면 Details창에서 할당하고 사용가능
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	FName StartSoketName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	FName EndSoketName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	TObjectPtr<USoundBase> SoundFile;
 };
