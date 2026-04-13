@@ -8,9 +8,10 @@
 
 #include "WeaponBase.generated.h"
 
-/**
- *
- */
+class UMaterialInstance;
+class UParticleSystem;
+
+
 UCLASS()
 class L20250316_P38_API AWeaponBase : public AItemBase
 {
@@ -27,4 +28,23 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Data)
 	EWeaponState WeaponType;
+
+	// Fire
+	void Fire();
+
+	// Fire Resource
+	// Decal
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	TObjectPtr<UMaterialInstance> DecalTemplate;
+
+	// Effect
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	TObjectPtr<UParticleSystem> MuzzleFlashEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	TObjectPtr<UParticleSystem> HitEffect;
+
+	// Sound
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	TObjectPtr<USoundBase> FireSound;
 };

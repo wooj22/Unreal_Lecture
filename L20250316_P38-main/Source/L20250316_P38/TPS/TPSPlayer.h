@@ -103,19 +103,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	TSubclassOf<class AWeaponBase> DefalutWeapon;
 	
-	// Decal
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	TObjectPtr<UMaterialInstance> DecalTemplate;
+	
 
-	// Effect
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	TObjectPtr<UParticleSystem> MuzzleFlashEffect;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	TObjectPtr<UParticleSystem> HitEffect;
-
-	// Sound
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	TObjectPtr<USoundBase> FireSound;
+	// TakeDamage Override
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 };

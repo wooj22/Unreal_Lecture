@@ -10,9 +10,6 @@
 #include "EnhancedInputComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "WeaponBase.h"
-#include "Kismet/KismetSystemLibrary.h"
-#include "Kismet/GameplayStatics.h"
-#include "Components/DecalComponent.h"
 #include "BulletDemageType.h"
 
 // Sets default values
@@ -139,97 +136,27 @@ void ATPSPlayer::EquipItem(TSubclassOf<AWeaponBase> WeaponTemplate)
 	}
 }
 
+float ATPSPlayer::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float ActualDamage = Super::TakeDamage(
+		Damage,
+		DamageEvent,
+		EventInstigator,
+		DamageCauser);
+
+	if (ActualDamage <= 0.f) return 0.f;
+
+	UE_LOG(LogTemp, Warning, TEXT("Player Damaged!"));
+
+	return ActualDamage;
+}
+
 void ATPSPlayer::Fire()
 {
-
-	FVector StartTrace = FollorCamera->GetComponentLocation();
-	FVector EndTrace;
-
-	APlayerController* PC = Cast<APlayerController>(GetController());
-	if (PC)
+	AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
+	if (ChildWeapon)
 	{
-		int32 ScreenSizeX = 0;
-		int32 ScreenSizeY = 0; 
-		FVector WorldLocation;
-		FVector WorldDirection;
-
-		PC->GetViewportSize(ScreenSizeX, ScreenSizeY);
-		PC->DeprojectScreenPositionToWorld(ScreenSizeX / 2, ScreenSizeY / 2, WorldLocation, WorldDirection);
-
-		EndTrace = StartTrace + (WorldDirection * 100000.f);
-
-		TArray<TEnumAsByte<EObjectTypeQuery>> Objects;
-		Objects.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
-		Objects.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic));
-		Objects.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic));
-
-		TArray<AActor*> IgnoreActors;
-		IgnoreActors.Add(this);
-
-		FHitResult OutHit;
-
-		bool Result = UKismetSystemLibrary::LineTraceSingleForObjects(
-			GetWorld(),
-			StartTrace,
-			EndTrace,
-			Objects,
-			true,
-			IgnoreActors,
-			EDrawDebugTrace::ForDuration,
-			OutHit,
-			true,
-			FLinearColor::Red,
-			FLinearColor::Green,
-			5.0f);
-
-		// Shoot
-		if (Result)
-		{
-			// Shoot Hit Decal Texture
-			UDecalComponent* Decal = UGameplayStatics::SpawnDecalAtLocation(GetWorld(),
-				DecalTemplate,
-				FVector(5.f, 5.f, 5.f),
-				OutHit.ImpactPoint,
-				OutHit.ImpactNormal.Rotation(),
-				5.0f);
-
-			if (Decal)
-			{
-				Decal->SetFadeScreenSize(0.005f);
-			}
-
-			// Damage
-			UGameplayStatics::ApplyDamage(
-				OutHit.GetActor(),
-				10.0f,
-				GetController(),
-				this,
-				UDamageType::StaticClass()  // BulletDemageType
-			);
-
-			// Effect
-			UGameplayStatics::SpawnEmitterAtLocation(
-				GetWorld(),
-				MuzzleFlashEffect,
-				Weapon->GetSocketLocation(TEXT("Muzzle")),
-				Weapon->GetSocketRotation(TEXT("Muzzle"))
-			);
-
-			UGameplayStatics::SpawnEmitterAtLocation(
-				GetWorld(),
-				HitEffect,
-				Weapon->GetSocketLocation(TEXT("Muzzle")),
-				Weapon->GetSocketRotation(TEXT("Muzzle"))
-			);
-
-			// Sound
-			UGameplayStatics::SpawnSoundAtLocation(
-				GetWorld(),
-				FireSound,
-				Weapon->GetSocketLocation(TEXT("Muzzle")),
-				Weapon->GetSocketRotation(TEXT("Muzzle"))
-			);
-		}
+		ChildWeapon->Fire();
 	}
 }
 
