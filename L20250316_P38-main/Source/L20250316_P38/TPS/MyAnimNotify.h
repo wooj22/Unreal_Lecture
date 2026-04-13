@@ -6,12 +6,15 @@
 #include "Animation/AnimNotifies/AnimNotify.h"
 #include "MyAnimNotify.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class L20250316_P38_API UMyAnimNotify : public UAnimNotify
 {
 	GENERATED_BODY()
 	
+public:
+	FString GetNotifyName_Implementation() const;
+
+	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, 
+		const FAnimNotifyEventReference& EventReference) override;
 };
