@@ -6,6 +6,17 @@
 #include "GameFramework/Character.h"
 #include "Zombie.generated.h"
 
+UENUM()
+enum class EZombieState : uint8
+{
+	Idle	 = 0 UMETA(DisplayName = "Idle"),
+	Chase	 = 1 UMETA(DisplayName = "Chase"),
+	Battle	 = 2 UMETA(DisplayName = "Battle"),
+	Death	 = 3 UMETA(DisplayName = "Death")
+};
+
+
+
 UCLASS()
 class L20250316_P38_API AZombie : public ACharacter
 {
@@ -26,4 +37,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat")
+	EZombieState CurrentState;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat")
+	uint8 HP = 100;
 };
