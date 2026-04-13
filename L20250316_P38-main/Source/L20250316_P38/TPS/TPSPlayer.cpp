@@ -145,8 +145,11 @@ float ATPSPlayer::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACon
 		DamageCauser);
 
 	if (ActualDamage <= 0.f) return 0.f;
-
 	UE_LOG(LogTemp, Warning, TEXT("Player Damaged!"));
+
+	// Animation Montage
+	FString Temp = FString::Printf(TEXT("Hit0%d_Start"), FMath::RandRange(1, 3));
+	PlayAnimMontage(HitAnimation, 1.0f, FName(Temp));
 
 	return ActualDamage;
 }
@@ -162,8 +165,10 @@ void ATPSPlayer::Fire()
 
 void ATPSPlayer::StartFire()
 {
+
 }
 
 void ATPSPlayer::StopFire()
 {
+
 }

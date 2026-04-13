@@ -14,6 +14,7 @@ class UInputAction;
 class AWeaponBase;
 class UMaterialInstance;
 class UParticleSystem;
+class UAnimMontage;
 
 UENUM(BlueprintType)
 enum class EWeaponState : uint8
@@ -104,7 +105,11 @@ public:
 	TSubclassOf<class AWeaponBase> DefalutWeapon;
 	
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	TObjectPtr<UAnimMontage> HitAnimation;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	TObjectPtr<UAnimMontage> ReloadAnimation;
 
 	// TakeDamage Override
 	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
