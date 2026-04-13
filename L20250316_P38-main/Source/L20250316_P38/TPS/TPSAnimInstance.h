@@ -38,4 +38,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stat")
 	uint8 bIsFire : 1 = false;
 
+
+	// Animation Notify
+	UFUNCTION()
+	void AnimNotify_SkeletonNotifyReload();
 };

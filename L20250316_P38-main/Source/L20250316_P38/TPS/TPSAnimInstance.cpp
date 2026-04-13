@@ -24,3 +24,8 @@ void UTPSAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		bIsFire = Player->bIsFire;
 	}
 }
+
+void UTPSAnimInstance::AnimNotify_SkeletonNotifyReload()
+{
+	UE_LOG(LogTemp, Warning, TEXT("AnimNotify_SkeletonNotifyReload"));
+}
