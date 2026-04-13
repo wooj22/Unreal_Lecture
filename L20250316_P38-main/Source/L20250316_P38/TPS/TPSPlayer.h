@@ -12,6 +12,8 @@ class UCameraComponent;
 class USpringArmComponent;
 class UInputAction;
 class AWeaponBase;
+class UMaterialInstance;
+class UParticleSystem;
 
 UENUM(BlueprintType)
 enum class EWeaponState : uint8
@@ -100,5 +102,20 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	TSubclassOf<class AWeaponBase> DefalutWeapon;
+	
+	// Decal
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	TObjectPtr<UMaterialInstance> DecalTemplate;
 
+	// Effect
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	TObjectPtr<UParticleSystem> MuzzleFlashEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	TObjectPtr<UParticleSystem> HitEffect;
+
+	// Sound
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	TObjectPtr<USoundBase> FireSound;
 };

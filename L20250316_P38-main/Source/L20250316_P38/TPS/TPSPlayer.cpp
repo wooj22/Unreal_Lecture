@@ -11,6 +11,9 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "WeaponBase.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "Components/DecalComponent.h"
+#include "BulletDemageType.h"
 
 // Sets default values
 ATPSPlayer::ATPSPlayer()
@@ -178,9 +181,54 @@ void ATPSPlayer::Fire()
 			FLinearColor::Red,
 			FLinearColor::Green,
 			5.0f);
+
+		// Shoot
 		if (Result)
 		{
+			// Shoot Hit Decal Texture
+			UDecalComponent* Decal = UGameplayStatics::SpawnDecalAtLocation(GetWorld(),
+				DecalTemplate,
+				FVector(5.f, 5.f, 5.f),
+				OutHit.ImpactPoint,
+				OutHit.ImpactNormal.Rotation(),
+				5.0f);
 
+			if (Decal)
+			{
+				Decal->SetFadeScreenSize(0.005f);
+			}
+
+			// Damage
+			UGameplayStatics::ApplyDamage(
+				OutHit.GetActor(),
+				10.0f,
+				GetController(),
+				this,
+				UDamageType::StaticClass()  // BulletDemageType
+			);
+
+			// Effect
+			UGameplayStatics::SpawnEmitterAtLocation(
+				GetWorld(),
+				MuzzleFlashEffect,
+				Weapon->GetSocketLocation(TEXT("Muzzle")),
+				Weapon->GetSocketRotation(TEXT("Muzzle"))
+			);
+
+			UGameplayStatics::SpawnEmitterAtLocation(
+				GetWorld(),
+				HitEffect,
+				Weapon->GetSocketLocation(TEXT("Muzzle")),
+				Weapon->GetSocketRotation(TEXT("Muzzle"))
+			);
+
+			// Sound
+			UGameplayStatics::SpawnSoundAtLocation(
+				GetWorld(),
+				FireSound,
+				Weapon->GetSocketLocation(TEXT("Muzzle")),
+				Weapon->GetSocketRotation(TEXT("Muzzle"))
+			);
 		}
 	}
 }
