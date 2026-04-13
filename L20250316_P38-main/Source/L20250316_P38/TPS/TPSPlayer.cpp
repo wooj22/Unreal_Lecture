@@ -69,7 +69,11 @@ void ATPSPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 		EIC->BindAction(IA_TPSZoom, ETriggerEvent::Triggered, this, &ATPSPlayer::Zoom);
 
-		EIC->BindAction(IA_TPSFire, ETriggerEvent::Triggered, this, &ATPSPlayer::Fire);
+		EIC->BindAction(IA_TPSFire, ETriggerEvent::Triggered, this, &ATPSPlayer::StartFire);
+		EIC->BindAction(IA_TPSFire, ETriggerEvent::Completed, this, &ATPSPlayer::StopFire);
+		EIC->BindAction(IA_TPSFire, ETriggerEvent::Canceled, this, &ATPSPlayer::StopFire);
+		
+		EIC->BindAction(IA_Reload, ETriggerEvent::Triggered, this, &ATPSPlayer::Reload);
 	}
 }
 
@@ -154,6 +158,17 @@ float ATPSPlayer::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACon
 	return ActualDamage;
 }
 
+void ATPSPlayer::StartFire()
+{
+	bIsFire = true;
+	Fire();
+}
+
+void ATPSPlayer::StopFire()
+{
+	bIsFire = false;
+}
+
 void ATPSPlayer::Fire()
 {
 	AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
@@ -163,12 +178,27 @@ void ATPSPlayer::Fire()
 	}
 }
 
-void ATPSPlayer::StartFire()
+void ATPSPlayer::Reload()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Reload"));
 
-}
+	AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
+	if (ChildWeapon)
+	{
+		
 
-void ATPSPlayer::StopFire()
-{
-
+		switch (ChildWeapon->WeaponType)
+		{
+			case EWeaponState::Pistol:
+			{
+				PlayAnimMontage(ReloadAnimation, 1.0, FName("Pistol"));
+				break;
+			}
+			case EWeaponState::Rifle:
+			{
+				PlayAnimMontage(ReloadAnimation, 1.0, FName("Rifle"));
+				break;
+			}
+		}
+	}
 }

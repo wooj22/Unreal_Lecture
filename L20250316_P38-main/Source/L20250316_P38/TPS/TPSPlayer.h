@@ -52,12 +52,14 @@ public:
 
 	void Zoom(const FInputActionValue& Value);
 
-	void Fire();
-
 	void StartFire();
 
 	void StopFire();
 
+	void Reload();
+
+	// Fire
+	void Fire();
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
@@ -76,7 +78,7 @@ public:
 
 
 
-
+	// Input Action
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_TPSMove;
 
@@ -93,6 +95,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_TPSFire;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<UInputAction> IA_Reload;
+
+	// Weapon
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	EWeaponState CurrentWeapon;

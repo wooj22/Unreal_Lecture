@@ -20,5 +20,7 @@ void UTPSAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 		AimYaw = Player->GetBaseAimRotation().Yaw;
 		AimPitch = Player->GetBaseAimRotation().Pitch;
+
+		bIsFire = Player->bIsFire;
 	}
 }
