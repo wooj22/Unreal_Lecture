@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "GenericTeamAgentInterface.h"
 
 #include "TPSPlayer.generated.h"
 
@@ -12,9 +13,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class UInputAction;
 class AWeaponBase;
-class UMaterialInstance;
-class UParticleSystem;
-class UAnimMontage;
+class UAIPerceptionStimuliSourceComponent;
 
 UENUM(BlueprintType)
 enum class EWeaponState : uint8
@@ -27,7 +26,7 @@ enum class EWeaponState : uint8
 
 
 UCLASS()
-class L20250316_P38_API ATPSPlayer : public ACharacter
+class L20250316_P38_API ATPSPlayer : public ACharacter, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -52,14 +51,14 @@ public:
 
 	void Zoom(const FInputActionValue& Value);
 
+	void Fire();
+
 	void StartFire();
 
 	void StopFire();
 
 	void Reload();
 
-	// Fire
-	void Fire();
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
@@ -76,9 +75,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UChildActorComponent> Weapon;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UAIPerceptionStimuliSourceComponent> StimuliSoruce;
 
 
-	// Input Action
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_TPSMove;
 
@@ -98,7 +99,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_Reload;
 
-	// Weapon
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	EWeaponState CurrentWeapon;
@@ -109,14 +109,31 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	TSubclassOf<class AWeaponBase> DefalutWeapon;
-	
-	
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	TObjectPtr<UAnimMontage> HitAnimation;
+	TObjectPtr<UAnimMontage> HitAnimaion;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	TObjectPtr<UAnimMontage> ReloadAnimation;
+	
 
-	// TakeDamage Override
-	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	// Damage
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+	
+	// IGenericTeamAgentInterface
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	FGenericTeamId MyTeamID;
+
+	virtual void SetGenericTeamId(const FGenericTeamId& TeamID) override
+	{
+		MyTeamID = TeamID;
+	}
+
+	virtual FGenericTeamId GetGenericTeamId() const override 
+	{ 
+		return MyTeamID;
+	}
+
 };

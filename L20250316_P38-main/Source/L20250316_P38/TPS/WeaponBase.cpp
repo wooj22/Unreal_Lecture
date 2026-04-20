@@ -3,30 +3,34 @@
 
 #include "WeaponBase.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "Components/DecalComponent.h"
-#include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "Camera/CameraComponent.h"
 #include "TPSPlayer.h"
-#include "GameFramework/PlayerController.h"
+#include "Camera/CameraComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "Components/DecalComponent.h"
+#include "BulletDamageType.h"
+
 
 AWeaponBase::AWeaponBase()
 {
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
 	RootComponent = Mesh;
-
 }
-
 
 void AWeaponBase::Fire()
 {
 	ATPSPlayer* Player = Cast<ATPSPlayer>(GetOwner());
-	if (!Player) return;
+
+	if (!Player)
+	{
+		return;
+	}
 
 	FVector StartTrace = Player->FollorCamera->GetComponentLocation();
 	FVector EndTrace;
 
-	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	APlayerController* PC = Cast<APlayerController>(Player->GetController());
 	if (PC)
 	{
 		int32 ScreenSizeX = 0;
@@ -62,54 +66,52 @@ void AWeaponBase::Fire()
 			FLinearColor::Red,
 			FLinearColor::Green,
 			5.0f);
-
-		// Shoot
 		if (Result)
 		{
-			// Shoot Hit Decal Texture
 			UDecalComponent* Decal = UGameplayStatics::SpawnDecalAtLocation(GetWorld(),
 				DecalTemplate,
 				FVector(5.f, 5.f, 5.f),
 				OutHit.ImpactPoint,
 				OutHit.ImpactNormal.Rotation(),
-				5.0f);
+				5.f);
 
 			if (Decal)
 			{
 				Decal->SetFadeScreenSize(0.005f);
 			}
 
-			// Damage
 			UGameplayStatics::ApplyDamage(
 				OutHit.GetActor(),
 				10.0f,
-				PC,
+				Player->GetController(),
 				this,
-				UDamageType::StaticClass()  // BulletDemageType
-			);
-
-			// Effect
-			UGameplayStatics::SpawnEmitterAtLocation(
-				GetWorld(),
-				MuzzleFlashEffect,
-				Mesh->GetSocketLocation(TEXT("Muzzle")),
-				Mesh->GetSocketRotation(TEXT("Muzzle"))
-			);
-
-			UGameplayStatics::SpawnEmitterAtLocation(
-				GetWorld(),
-				HitEffect,
-				Mesh->GetSocketLocation(TEXT("Muzzle")),
-				Mesh->GetSocketRotation(TEXT("Muzzle"))
-			);
-
-			// Sound
-			UGameplayStatics::SpawnSoundAtLocation(
-				GetWorld(),
-				FireSound,
-				Mesh->GetSocketLocation(TEXT("Muzzle")),
-				Mesh->GetSocketRotation(TEXT("Muzzle"))
+				UBulletDamageType::StaticClass()
 			);
 		}
+
+		//Muzzle Flash
+		UGameplayStatics::SpawnEmitterAtLocation(
+			GetWorld(),
+			MuzzleFlashEffect,
+			Mesh->GetSocketLocation(TEXT("Muzzle")),
+			Mesh->GetSocketRotation(TEXT("Muzzle"))
+		);
+
+		//Hit Effect
+		UGameplayStatics::SpawnEmitterAtLocation(
+			GetWorld(),
+			HitEffect,
+			OutHit.ImpactPoint,
+			OutHit.ImpactNormal.Rotation()
+		);
+
+		//UGameplayStatics::SpawnSoundAtLocation(
+		//	GetWorld(),
+		//	FireSound,
+		//	Weapon->GetSocketLocation(TEXT("Muzzle")),
+		//	Weapon->GetSocketRotation(TEXT("Muzzle"))
+		//);
+
 	}
+
 }

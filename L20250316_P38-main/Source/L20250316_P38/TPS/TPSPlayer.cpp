@@ -10,7 +10,11 @@
 #include "EnhancedInputComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "WeaponBase.h"
-#include "BulletDemageType.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "Components/DecalComponent.h"
+#include "BulletDamageType.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
 
 // Sets default values
 ATPSPlayer::ATPSPlayer()
@@ -32,6 +36,9 @@ ATPSPlayer::ATPSPlayer()
 		FRotator(0, -90.0f, 0)
 		);
 
+	StimuliSoruce = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("StimuliSoruce"));
+
+	SetGenericTeamId(2);
 }
 
 // Called when the game starts or when spawned
@@ -70,10 +77,12 @@ void ATPSPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 		EIC->BindAction(IA_TPSZoom, ETriggerEvent::Triggered, this, &ATPSPlayer::Zoom);
 
 		EIC->BindAction(IA_TPSFire, ETriggerEvent::Triggered, this, &ATPSPlayer::StartFire);
+
 		EIC->BindAction(IA_TPSFire, ETriggerEvent::Completed, this, &ATPSPlayer::StopFire);
 		EIC->BindAction(IA_TPSFire, ETriggerEvent::Canceled, this, &ATPSPlayer::StopFire);
-		
+
 		EIC->BindAction(IA_Reload, ETriggerEvent::Triggered, this, &ATPSPlayer::Reload);
+
 	}
 }
 
@@ -126,9 +135,7 @@ void ATPSPlayer::EquipItem(TSubclassOf<AWeaponBase> WeaponTemplate)
 				CurrentWeapon = ChildWeapon->WeaponType;
 				break;
 			}
-		}
-		switch (ChildWeapon->WeaponType)
-		{
+
 			case EWeaponState::Rifle:
 			{
 				ChildWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, ChildWeapon->SocketName);
@@ -140,22 +147,31 @@ void ATPSPlayer::EquipItem(TSubclassOf<AWeaponBase> WeaponTemplate)
 	}
 }
 
-float ATPSPlayer::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+float ATPSPlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	float ActualDamage = Super::TakeDamage(
-		Damage,
-		DamageEvent,
-		EventInstigator,
-		DamageCauser);
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-	if (ActualDamage <= 0.f) return 0.f;
-	UE_LOG(LogTemp, Warning, TEXT("Player Damaged!"));
 
-	// Animation Montage
 	FString Temp = FString::Printf(TEXT("Hit0%d_Start"), FMath::RandRange(1, 3));
-	PlayAnimMontage(HitAnimation, 1.0f, FName(Temp));
 
-	return ActualDamage;
+	UE_LOG(LogTemp, Warning, TEXT("Damage %s"), *Temp);
+	
+	PlayAnimMontage(HitAnimaion,
+		1.0f,
+		FName(Temp)
+	);
+
+	return DamageAmount;
+}
+
+void ATPSPlayer::Fire()
+{
+	AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
+	if (ChildWeapon)
+	{
+		ChildWeapon->Fire();
+	}
+	
 }
 
 void ATPSPlayer::StartFire()
@@ -169,34 +185,31 @@ void ATPSPlayer::StopFire()
 	bIsFire = false;
 }
 
-void ATPSPlayer::Fire()
-{
-	AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
-	if (ChildWeapon)
-	{
-		ChildWeapon->Fire();
-	}
-}
 
 void ATPSPlayer::Reload()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Reload"));
 
+
 	AWeaponBase* ChildWeapon = Cast<AWeaponBase>(Weapon->GetChildActor());
 	if (ChildWeapon)
 	{
-		
-
 		switch (ChildWeapon->WeaponType)
 		{
 			case EWeaponState::Pistol:
 			{
-				PlayAnimMontage(ReloadAnimation, 1.0, FName("Pistol"));
+				PlayAnimMontage(ReloadAnimation,
+					1.0f,
+					FName("Pistol")
+				);
 				break;
 			}
 			case EWeaponState::Rifle:
 			{
-				PlayAnimMontage(ReloadAnimation, 1.0, FName("Rifle"));
+				PlayAnimMontage(ReloadAnimation,
+					1.0f,
+					FName("Rifle")
+				);
 				break;
 			}
 		}
