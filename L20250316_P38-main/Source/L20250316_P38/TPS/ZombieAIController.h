@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "Perception\AIPerceptionTypes.h"
+#include "Zombie.h"
 #include "ZombieAIController.generated.h"
 
 
@@ -40,4 +41,6 @@ public:
 	UFUNCTION()
 	void ProcessTargetForgotten(AActor* Actor);
 
+	UFUNCTION(BlueprintCallable)
+	void SetState(EZombieState NewState);
 };
